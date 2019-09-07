@@ -28,20 +28,42 @@ function buildCharts(sample) {
   // Plot the default route once the page loads
   var defaultURL = "/samples/" + sample;
 
-    // @TODO: Build a Bubble Chart using the sample data
-
-
-    // @TODO: Build a Pie Chart
+     // @TODO: Build a Pie Chart
     d3.json(defaultURL).then(function(data) {
-      data["values"] = data["values"].slice(0, 10);
-      data["labels"] = data["labels"].slice(0, 10);
-      data["hoverinfo"] = data["hoverinfo"].slice(0, 10);
-      console.log(data);
+      var data1 = {
+        "values": data.otu_ids,
+        "labels": data.sample_values,
+        "hoverinfo": data.otu_labels,
+        "type": "pie"    
+     }
+      data1["values"] = data1["values"].slice(0, 10);
+      data1["labels"] = data1["labels"].slice(0, 10);
+      data1["hoverinfo"] = data1["hoverinfo"].slice(0, 10);
+      console.log(data1);
       var layout = { title: "Pie chart"};
-      Plotly.newPlot("pie", [data], layout);
-    });
+      Plotly.newPlot("pie", [data1], layout);
+    // });
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
+
+     // @TODO: Build a Bubble Chart using the sample data
+     var size = data.sample_values 
+     var data2 = {
+        "x": data.sample_values,
+        "y": data.otu_ids,
+        "text": data.otu_labels,
+        "mode": "markers",
+        "marker": {
+          color: data.otu_ids,
+          size: size,
+          sizemode: 'area',
+          symbol: 'circle'
+        },          
+        "type": "scatter"   
+      }
+      Plotly.newPlot("bubble", [data2]);
+    });
+
 }
 
 function init() {
