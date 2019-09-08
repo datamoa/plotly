@@ -53,9 +53,11 @@ function buildCharts(sample) {
 
      // @TODO: Build a Bubble Chart using the sample data
      console.log(data.otu_ids)
-     var xAxis = data.sample_values;
-     var yAxis = data.otu_ids;
-     var size = data.otu_ids;
+    //  var xAxis = data.sample_values;
+    //  var yAxis = data.otu_ids;
+     var xAxis = data.otu_ids;
+     var yAxis = data.sample_values;
+     var size = data.sample_values;
      console.log(xAxis);
      console.log(yAxis); 
      var data2 = {
