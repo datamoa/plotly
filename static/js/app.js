@@ -1,21 +1,21 @@
 function buildMetadata(sample) {
-
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
+    var sampleDict =d3.json(`/metadata/${sample}`).then(function(sample){
     // Use d3 to select the panel with id of `#sample-metadata`
-    var panel = d3.select("#sample-metadata").node().value;
-
-  
-
- 
+    var dataPanel = d3.select("#sample-metadata")/*.node().value*/;
     // Use `.html("") to clear any existing metadata
-    d3.select("#sample-metadata").node().value = "";
+    dataPanel.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
-
+    Object.entries(sample).forEach(function([key, value]) {
+      var row = dataPanel.append('p');
+      row.text(`${key}:${value}`)
+    })
+  });
 
     // BONUS: Build the Gauge Chart
     // buildGauge(data.WFREQ);
@@ -30,38 +30,48 @@ function buildCharts(sample) {
 
      // @TODO: Build a Pie Chart
     d3.json(defaultURL).then(function(data) {
-      var data1 = {
-        "values": data.otu_ids,
-        "labels": data.sample_values,
-        "hoverinfo": data.otu_labels,
-        "type": "pie"    
-     }
-      data1["values"] = data1["values"].slice(0, 10);
-      data1["labels"] = data1["labels"].slice(0, 10);
-      data1["hoverinfo"] = data1["hoverinfo"].slice(0, 10);
-      console.log(data1);
-      var layout = { title: "Pie chart"};
-      Plotly.newPlot("pie", [data1], layout);
-    // });
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
+    //   var data1 = {
+    //     "values": data.otu_ids,
+    //     "labels": data.sample_values,
+    //     "hoverinfo": data.otu_labels,
+    //     "type": "pie"    
+    //  }
+    // Define pie chart properties. HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
+      var values = data.sample_values.slice(0, 10);
+      var labels = data.otu_ids.slice(0, 10);
+      var hoverinfo = data.otu_labels.slice(0, 10);
+
+      var data1 = {
+            "values": values,
+            "labels": labels,
+            "hoverinfo": hoverinfo,
+            "type": "pie"    
+         }
+      var layout = { title: "Top 10 samples"};
+      Plotly.newPlot("pie", [data1], layout);
 
      // @TODO: Build a Bubble Chart using the sample data
-     var size = data.sample_values 
+     console.log(data.otu_ids)
+     var xAxis = data.sample_values;
+     var yAxis = data.otu_ids;
+     var size = data.otu_ids;
+     console.log(xAxis);
+     console.log(yAxis); 
      var data2 = {
-        "x": data.sample_values,
-        "y": data.otu_ids,
+        "x": xAxis,
+        "y": yAxis,
         "text": data.otu_labels,
         "mode": "markers",
         "marker": {
           color: data.otu_ids,
           size: size,
-          sizemode: 'area',
           symbol: 'circle'
         },          
         "type": "scatter"   
-      }
-      Plotly.newPlot("bubble", [data2]);
+      };
+      var layout = {title: "Belly Button Bacteria"}
+      Plotly.newPlot("bubble", [data2], layout);
     });
 
 }
